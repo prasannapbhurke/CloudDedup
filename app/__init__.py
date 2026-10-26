@@ -128,3 +128,7 @@ def create_app(config_name=None):
         return render_template("errors/500.html"), 500
 
     return server
+
+
+# Fallback instance for WSGI servers referencing app:app
+app = create_app(os.environ.get("FLASK_ENV", "production"))
