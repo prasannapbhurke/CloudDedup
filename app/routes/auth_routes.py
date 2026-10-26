@@ -24,6 +24,16 @@ def forgot_password_page():
     return render_template("forgot_password.html")
 
 
+@auth_bp.route("/dev/login-demo")
+def dev_login_demo():
+    """Development shortcut to log in as user Prasanna Bhurke for automated screenshots."""
+    from flask import redirect, make_response
+    token = "demo-token-Y5s5fLsMNKe0L2xpRSHy8zBoupt1:agd0874@gmail.com:Prasanna Bhurke"
+    resp = make_response(redirect("/dashboard"))
+    resp.set_cookie("firebase_id_token", token, max_age=86400, path="/")
+    return resp
+
+
 # -------------------------------------------------------------
 # REST API Endpoints
 # -------------------------------------------------------------

@@ -20,21 +20,31 @@ def init_firebase_admin(app=None):
 
     config = app.config if app else current_app.config
     cert_path = config.get("FIREBASE_SERVICE_ACCOUNT_PATH")
+    cert_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON")
 
     try:
-        if cert_path and os.path.exists(cert_path):
+        cred = None
+        if cert_json:
+            import json
+            cert_dict = json.loads(cert_json)
+            cred = credentials.Certificate(cert_dict)
+            logger.info("Firebase Admin SDK loading credentials from FIREBASE_SERVICE_ACCOUNT_JSON.")
+        elif cert_path and os.path.exists(cert_path):
             cred = credentials.Certificate(cert_path)
+            logger.info(f"Firebase Admin SDK loading credentials from file '{cert_path}'.")
+
+        if cred:
             bucket_name = config.get("FIREBASE_STORAGE_BUCKET")
             firebase_admin.initialize_app(
                 cred,
                 {"storageBucket": bucket_name} if bucket_name else None,
             )
             _firebase_app_initialized = True
-            logger.info("Firebase Admin SDK initialized successfully with service account.")
+            logger.info("Firebase Admin SDK initialized successfully.")
         else:
             # Check default credentials or mark uninitialized
             logger.warning(
-                f"Firebase service account file not found at '{cert_path}'. "
+                f"Firebase credentials not found (checked FIREBASE_SERVICE_ACCOUNT_JSON and '{cert_path}'). "
                 "Running in fallback/demo mode for authentication verification."
             )
     except ValueError as e:

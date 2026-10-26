@@ -641,14 +641,14 @@ def generate_report():
     if dash_top_path.exists():
         p_sc1 = doc.add_paragraph()
         p_sc1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_sc1.paragraph_format.space_before = Pt(2)
-        p_sc1.paragraph_format.space_after = Pt(2)
+        p_sc1.paragraph_format.space_before = Pt(1)
+        p_sc1.paragraph_format.space_after = Pt(1)
         r_dpic = p_sc1.add_run()
-        r_dpic.add_picture(str(dash_top_path), width=Inches(5.6))
+        r_dpic.add_picture(str(dash_top_path), width=Inches(4.5))
 
         p_scap1 = doc.add_paragraph()
         p_scap1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_scap1.paragraph_format.space_after = Pt(4)
+        p_scap1.paragraph_format.space_after = Pt(2)
         r_sc1 = p_scap1.add_run("Figure 4.1: Live Web Dashboard with Real-Time Storage Analytics & Upload Area")
         set_font_times(r_sc1, size_pt=8.5, bold=True, color=COLOR_SECONDARY)
 
@@ -678,7 +678,7 @@ def generate_report():
     p_ch5 = doc.add_paragraph()
     r_c5 = p_ch5.add_run("5. TESTING, RESULTS & EXPERIMENTAL EVALUATION")
     set_font_times(r_c5, size_pt=14, bold=True, color=COLOR_PRIMARY)
-    p_ch5.paragraph_format.space_after = Pt(4)
+    p_ch5.paragraph_format.space_after = Pt(3)
 
     p_5_1 = doc.add_paragraph()
     r_5_1_h = p_5_1.add_run("5.1 Experimental Testing Setup\n")
@@ -701,7 +701,7 @@ def generate_report():
     for i, h in enumerate(t_headers):
         cell = test_table.cell(0, i)
         set_cell_background(cell, "F1F5F9")
-        set_cell_margins(cell, top=40, bottom=40, left=50, right=50)
+        set_cell_margins(cell, top=35, bottom=35, left=45, right=45)
         set_cell_borders(cell)
         p = cell.paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -719,7 +719,7 @@ def generate_report():
         row = test_table.rows[row_idx]
         for col_idx, val in enumerate(r_data):
             cell = row.cells[col_idx]
-            set_cell_margins(cell, top=35, bottom=35, left=50, right=50)
+            set_cell_margins(cell, top=30, bottom=30, left=45, right=45)
             set_cell_borders(cell, top="E2E8F0", bottom="E2E8F0", left="E2E8F0", right="E2E8F0")
             p = cell.paragraphs[0]
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER if col_idx != 1 else WD_ALIGN_PARAGRAPH.LEFT
@@ -728,8 +728,8 @@ def generate_report():
 
     p_ttitle = doc.add_paragraph()
     p_ttitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_ttitle.paragraph_format.space_before = Pt(2)
-    p_ttitle.paragraph_format.space_after = Pt(2)
+    p_ttitle.paragraph_format.space_before = Pt(1)
+    p_ttitle.paragraph_format.space_after = Pt(1)
     r_tt = p_ttitle.add_run("Table 5.1: Experimental Deduplication Test Results & Storage Accounting")
     set_font_times(r_tt, size_pt=8.5, bold=True, color=COLOR_SECONDARY)
 
@@ -740,14 +740,14 @@ def generate_report():
     if stat_img_path.exists():
         p_sc2 = doc.add_paragraph()
         p_sc2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_sc2.paragraph_format.space_before = Pt(2)
-        p_sc2.paragraph_format.space_after = Pt(2)
+        p_sc2.paragraph_format.space_before = Pt(1)
+        p_sc2.paragraph_format.space_after = Pt(1)
         r_spic = p_sc2.add_run()
-        r_spic.add_picture(str(stat_img_path), width=Inches(5.6))
+        r_spic.add_picture(str(stat_img_path), width=Inches(4.5))
 
         p_scap2 = doc.add_paragraph()
         p_scap2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_scap2.paragraph_format.space_after = Pt(4)
+        p_scap2.paragraph_format.space_after = Pt(2)
         r_sc2 = p_scap2.add_run("Figure 5.1: Live Storage Optimization Overview & 100% Deduplication Metrics")
         set_font_times(r_sc2, size_pt=8.5, bold=True, color=COLOR_SECONDARY)
 

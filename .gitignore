@@ -28,6 +28,8 @@ storage_local/
 .idea/
 *.swp
 *.swo
+~$*
+
 tempCodeRunnerFile.*
 
 # OS files
