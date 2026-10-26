@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}My Files{% endblock %}
+{% block page_title %}My Files Management{% endblock %}
+{% block page_desc %}Browse, search, download, and manage your private cloud file references{% endblock %}
+
+{% block content %}
+<!-- Search & Filter Controls -->
+<div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+  <div class="row g-3 align-items-center">
+    <!-- Search Bar -->
+    <div class="col-lg-4 col-md-6">
+      <div class="input-group">
+        <span class="input-group-text bg-light border-end-0 text-muted">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Search files by name...">
+      </div>
+    </div>
+
+    <!-- Filter by Type -->
+    <div class="col-lg-2 col-md-3 col-6">
+      <select id="typeFilter" class="form-select">
+        <option value="">All File Types</option>
+        <option value="pdf">PDF</option>
+        <option value="docx">Word (.docx)</option>
+        <option value="txt">Text (.txt)</option>
+        <option value="csv">CSV (.csv)</option>
+        <option value="xlsx">Excel (.xlsx)</option>
+        <option value="jpg">JPEG (.jpg)</option>
+        <option value="png">PNG (.png)</option>
+        <option value="zip">ZIP Archive</option>
+      </select>
+    </div>
+
+    <!-- Filter by Status -->
+    <div class="col-lg-2 col-md-3 col-6">
+      <select id="statusFilter" class="form-select">
+        <option value="">All Statuses</option>
+        <option value="original">Original Files</option>
+        <option value="duplicate">Duplicate References</option>
+      </select>
+    </div>
+
+    <!-- Sort By -->
+    <div class="col-lg-2 col-md-6 col-6">
+      <select id="sortBy" class="form-select">
+        <option value="date">Sort by Date</option>
+        <option value="name">Sort by Name</option>
+        <option value="size">Sort by Size</option>
+      </select>
+    </div>
+
+    <!-- Sort Order Toggle -->
+    <div class="col-lg-2 col-md-6 col-6 d-flex gap-2">
+      <button type="button" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-1" id="sortOrderBtn" title="Toggle Ascending / Descending">
+        <i class="bi bi-sort-down" id="sortOrderIcon"></i>
+        <span id="sortOrderText">Desc</span>
+      </button>
+      <button type="button" class="btn btn-light" id="resetFiltersBtn" title="Reset Filters">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Files Table Card -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th style="min-width: 240px;">File Name</th>
+          <th>Size</th>
+          <th>Deduplication Status</th>
+          <th>SHA-256 Fingerprint</th>
+          <th>Upload Date</th>
+          <th class="text-end" style="min-width: 130px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="filesTableBody">
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">
+            <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+            Loading files...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Footer -->
+  <div class="d-flex justify-content-between align-items-center p-3 border-top bg-light" id="paginationWrapper">
+    <span class="small text-muted" id="paginationInfo">Showing 0 files</span>
+    <nav>
+      <ul class="pagination pagination-sm mb-0" id="paginationNav"></ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/files.js') }}"></script>
+{% endblock %}

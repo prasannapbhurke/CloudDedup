@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+{% block page_title %}Application Settings & Profile{% endblock %}
+{% block page_desc %}User account metadata, cloud storage configuration, and deduplication policy{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+
+    <!-- User Profile Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+      <h5 class="fw-bold text-dark mb-3">User Profile</h5>
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="user-avatar" style="width: 54px; height: 54px; font-size: 1.35rem;" id="settingsAvatar">U</div>
+        <div>
+          <h5 class="fw-bold mb-0 text-dark" id="settingsName">Student User</h5>
+          <p class="text-secondary small mb-0" id="settingsEmail">student@clouddedup.com</p>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <label class="form-label small fw-semibold text-muted">Authentication Provider</label>
+          <input type="text" class="form-control bg-light" value="Firebase Authentication (JWT Token)" readonly>
+        </div>
+        <div class="col-sm-6">
+          <label class="form-label small fw-semibold text-muted">Primary Metadata Database</label>
+          <input type="text" class="form-control bg-light" value="MySQL Database (SQLAlchemy ORM)" readonly>
+        </div>
+        <div class="col-12">
+          <label class="form-label small fw-semibold text-muted">Firebase UID</label>
+          <input type="text" class="form-control bg-light text-muted font-monospace small" id="settingsUid" value="Loading..." readonly>
+        </div>
+      </div>
+    </div>
+
+    <!-- Storage Optimization Engine Parameters -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+      <h5 class="fw-bold text-dark mb-3">Deduplication & Cloud Engine Specifications</h5>
+      
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0">
+          <tbody>
+            <tr>
+              <td class="text-muted small ps-0" style="width: 220px;">Deduplication Method:</td>
+              <td class="fw-semibold text-dark">Cryptographic Content-Based (SHA-256)</td>
+            </tr>
+            <tr>
+              <td class="text-muted small ps-0">Chunk Hashing Size:</td>
+              <td class="fw-semibold text-dark">64 KB (Streaming chunk buffer)</td>
+            </tr>
+            <tr>
+              <td class="text-muted small ps-0">Storage Object Naming:</td>
+              <td class="fw-semibold text-dark font-monospace small">objects/&lt;sha256_hash&gt;</td>
+            </tr>
+            <tr>
+              <td class="text-muted small ps-0">Cloud Object Storage:</td>
+              <td class="fw-semibold text-dark">Firebase Cloud Storage (Google Cloud)</td>
+            </tr>
+            <tr>
+              <td class="text-muted small ps-0">Max Allowed Upload Size:</td>
+              <td class="fw-semibold text-dark">50 MB per file</td>
+            </tr>
+            <tr>
+              <td class="text-muted small ps-0">Supported Formats:</td>
+              <td class="fw-semibold text-dark">PDF, DOC, DOCX, TXT, CSV, XLS, XLSX, JPG, JPEG, PNG, ZIP</td>
+            </tr>
+            <tr>
+              <td class="text-muted small ps-0">Access Control Model:</td>
+              <td class="fw-semibold text-dark">Private Bucket &bull; User-Isolated Reference Security</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Session Actions -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+      <h5 class="fw-bold text-dark mb-2">Account Session</h5>
+      <p class="text-secondary small mb-3">Sign out from this browser session or clear cached credentials.</p>
+      <div>
+        <button type="button" class="btn btn-outline-danger px-4 rounded-3" onclick="logoutUser();">
+          <i class="bi bi-box-arrow-right me-2"></i>Sign Out of CloudDedup
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const res = await apiRequest('/api/auth/me');
+    if (res.ok && res.data.user) {
+      const u = res.data.user;
+      document.getElementById('settingsName').textContent = u.name;
+      document.getElementById('settingsEmail').textContent = u.email;
+      document.getElementById('settingsUid').value = u.firebase_uid;
+      const initial = (u.name || u.email || 'U').charAt(0).toUpperCase();
+      document.getElementById('settingsAvatar').textContent = initial;
+    }
+  });
+</script>
+{% endblock %}

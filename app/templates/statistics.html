@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Storage Statistics{% endblock %}
+{% block page_title %}Storage Analytics & Optimization Metrics{% endblock %}
+{% block page_desc %}Detailed breakdown of storage efficiency, content distribution, and savings leaderboards{% endblock %}
+
+{% block content %}
+<!-- Top 4 Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="stat-label">Total References</div>
+      <div class="stat-value" id="statsTotalRefs">0</div>
+      <div class="stat-subtext">User file entries</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="stat-label">Unique Cloud Objects</div>
+      <div class="stat-value text-primary" id="statsUniqueObjects">0</div>
+      <div class="stat-subtext">Distinct physical payloads</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="stat-label">Storage Saved</div>
+      <div class="stat-value text-success" id="statsSavedBytes">0 B</div>
+      <div class="stat-subtext">Prevented redundant uploads</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card">
+      <div class="stat-label">Efficiency Ratio</div>
+      <div class="stat-value text-info" id="statsSavingPercent">0.0%</div>
+      <div class="stat-subtext">Saved / Logical volume</div>
+    </div>
+  </div>
+</div>
+
+<!-- Detailed Storage Formula Breakdown -->
+<div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+  <h6 class="fw-bold text-dark mb-3">Cloud Storage Optimization Formula</h6>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="p-3 bg-light rounded-3 border">
+        <span class="text-muted small d-block mb-1">1. Logical Storage</span>
+        <h5 class="fw-bold text-dark mb-0" id="statsLogicalStorage">0 B</h5>
+        <small class="text-muted">&sum; sizes of all active file references</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="p-3 bg-light rounded-3 border">
+        <span class="text-muted small d-block mb-1">2. Physical Cloud Storage</span>
+        <h5 class="fw-bold text-dark mb-0" id="statsPhysicalStorage">0 B</h5>
+        <small class="text-muted">&sum; distinct objects in Firebase Storage</small>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="p-3 bg-success-subtle text-success rounded-3 border border-success-subtle">
+        <span class="small d-block mb-1 fw-semibold">3. Storage Preserved</span>
+        <h5 class="fw-bold mb-0" id="statsPreservedStorage">0 B</h5>
+        <small>Logical &minus; Physical Storage</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+      <h6 class="fw-bold text-dark mb-3">Storage Consumption by File Category (MB)</h6>
+      <div style="position: relative; height: 280px;">
+        <canvas id="categoryVolumeChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+      <h6 class="fw-bold text-dark mb-3">Deduplication Activity Trend (Past 14 Days)</h6>
+      <div style="position: relative; height: 280px;">
+        <canvas id="detailedTrendChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Two Column Table Section: Largest Files vs Duplicate Groups -->
+<div class="row g-4 mb-4">
+  <!-- Largest Files -->
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold text-dark mb-0">Largest Stored Cloud Objects</h6>
+        <span class="badge bg-light text-secondary">Top 5 by Size</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>File Name</th>
+              <th>Object Size</th>
+              <th>Fingerprint</th>
+            </tr>
+          </thead>
+          <tbody id="largestFilesTableBody">
+            <tr><td colspan="3" class="text-center py-3 text-muted">Loading largest files...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Duplicate Groups with Greatest Potential Savings -->
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold text-dark mb-0">Top Duplicate Content Clusters</h6>
+        <span class="badge bg-light text-secondary">Savings Leaderboard</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Content Sample</th>
+              <th>Refs</th>
+              <th>Storage Saved</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody id="topGroupsTableBody">
+            <tr><td colspan="4" class="text-center py-3 text-muted">Loading duplicate clusters...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/statistics.js') }}"></script>
+{% endblock %}

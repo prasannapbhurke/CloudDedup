@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+*.env
+
+# Firebase credentials and keys
+serviceAccountKey.json
+*service-account*.json
+firebase-adminsdk*.json
+
+# Database and SQLite local files
+*.sqlite3
+*.db
+
+# Local uploads temporary cache
+uploads/
+tmp/
+instance/
+storage_local/
+.pytest_cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+tempCodeRunnerFile.*
+
+# OS files
+.DS_Store
+Thumbs.db

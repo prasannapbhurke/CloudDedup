@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Duplicate Groups{% endblock %}
+{% block page_title %}Duplicate Content Groups{% endblock %}
+{% block page_desc %}Clusters of file references sharing identical SHA-256 cryptographic fingerprints{% endblock %}
+
+{% block content %}
+<!-- Explanatory Banner -->
+<div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+  <div class="d-flex align-items-center gap-3">
+    <div class="rounded-circle p-3 bg-primary-subtle text-primary">
+      <i class="bi bi-intersect fs-3"></i>
+    </div>
+    <div>
+      <h5 class="fw-bold mb-1 text-dark">What is a Duplicate Group?</h5>
+      <p class="text-secondary small mb-0">
+        A duplicate group represents multiple file references that share the exact same SHA-256 content hash.
+        CloudDedup stores only <strong>one physical object</strong> in Firebase Cloud Storage, preserving 100% of the redundant space.
+        Only groups with 2 or more of your active references are shown here.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Duplicate Groups Cards Grid -->
+<div id="duplicateGroupsContainer" class="row g-4 mb-4">
+  <div class="col-12 text-center py-5 text-muted">
+    <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+    Analyzing duplicate content groups...
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/duplicates.js') }}"></script>
+{% endblock %}

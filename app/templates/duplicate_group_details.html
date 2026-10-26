@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Group Details — Duplicate Group #{{ group_id }}{% endblock %}
+{% block page_title %}Duplicate Group Details{% endblock %}
+{% block page_desc %}Detailed inspection of file references sharing this cryptographic fingerprint{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <a href="/duplicate-groups" class="btn btn-outline-secondary btn-sm rounded-3">
+    <i class="bi bi-arrow-left me-1"></i>Back to Duplicate Groups
+  </a>
+</div>
+
+<!-- Group Summary Card -->
+<div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4" id="groupSummaryCard">
+  <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+    <div>
+      <h4 class="fw-bold text-dark mb-1">
+        Duplicate Group <span class="text-primary">#{{ group_id }}</span>
+      </h4>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="text-muted small">SHA-256 Fingerprint:</span>
+        <span class="hash-badge" id="groupFullHash">Loading hash...</span>
+      </div>
+    </div>
+    <span class="badge bg-success-subtle text-success border border-success-subtle py-2 px-3 rounded-pill fw-semibold">
+      <i class="bi bi-check-circle me-1"></i>Deduplicated in Cloud
+    </span>
+  </div>
+
+  <div class="row g-3 bg-light p-3 rounded-3 border">
+    <div class="col-md-3 col-6">
+      <span class="text-muted small d-block">Physical Object Size:</span>
+      <strong class="text-dark" id="groupPhysicalSize">0 B</strong>
+    </div>
+    <div class="col-md-3 col-6">
+      <span class="text-muted small d-block">Total User References:</span>
+      <strong class="text-dark" id="groupRefCount">0</strong>
+    </div>
+    <div class="col-md-3 col-6">
+      <span class="text-muted small d-block">Storage Saved (Formula: S &times; [N - 1]):</span>
+      <strong class="text-success" id="groupSavedBytes">0 B</strong>
+    </div>
+    <div class="col-md-3 col-6">
+      <span class="text-muted small d-block">Cloud Objects Stored:</span>
+      <strong class="text-primary">Exactly 1 Object</strong>
+    </div>
+  </div>
+</div>
+
+<!-- Reference Comparison Table -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+  <div class="p-3 border-bottom bg-light">
+    <h6 class="fw-bold mb-0 text-dark">Linked File References in this Group</h6>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>File Name</th>
+          <th>Size</th>
+          <th>Status</th>
+          <th>Upload Date</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="groupReferencesTableBody">
+        <tr>
+          <td colspan="5" class="text-center py-4 text-muted">
+            <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+            Loading group references...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const CURRENT_GROUP_ID = {{ group_id }};
+</script>
+<script src="{{ url_for('static', filename='js/duplicates.js') }}"></script>
+{% endblock %}

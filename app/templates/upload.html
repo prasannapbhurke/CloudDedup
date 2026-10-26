@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File{% endblock %}
+{% block page_title %}Upload File & Deduplication Engine{% endblock %}
+{% block page_desc %}Upload files to Firebase Cloud Storage with automated SHA-256 content deduplication{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-xl-8 col-lg-10">
+
+    <!-- Upload Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+      <div class="text-center mb-4">
+        <h4 class="fw-bold text-dark mb-1">Upload New File</h4>
+        <p class="text-secondary small">
+          Identical file contents are automatically detected using SHA-256 fingerprinting.
+          Redundant uploads to Firebase Storage are skipped to optimize cloud costs and storage space.
+        </p>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div class="upload-dropzone mb-4" id="uploadDropzone">
+        <input type="file" id="fileInput" class="d-none" accept=".pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.jpg,.jpeg,.png,.zip">
+        <div class="dropzone-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+        <h5 class="fw-bold text-dark mb-2">Drag and drop your file here</h5>
+        <p class="text-muted small mb-3">or click to browse from your device</p>
+        <button type="button" class="btn btn-outline-primary px-4 py-2 rounded-3" id="browseFileBtn">
+          <i class="bi bi-folder2-open me-2"></i>Choose File
+        </button>
+      </div>
+
+      <!-- File Allowed Types Information -->
+      <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+        <span class="badge bg-light text-secondary border">PDF</span>
+        <span class="badge bg-light text-secondary border">DOC & DOCX</span>
+        <span class="badge bg-light text-secondary border">TXT</span>
+        <span class="badge bg-light text-secondary border">CSV & Excel</span>
+        <span class="badge bg-light text-secondary border">JPG & PNG</span>
+        <span class="badge bg-light text-secondary border">ZIP</span>
+        <span class="badge bg-info-subtle text-info">Max 50 MB</span>
+      </div>
+
+      <!-- Selected File Preview Box -->
+      <div class="card border bg-light rounded-3 p-3 mb-4 d-none" id="filePreviewCard">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-3">
+            <div class="fs-2 text-primary" id="previewIcon">
+              <i class="bi bi-file-earmark"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark" id="previewFilename">filename.pdf</div>
+              <div class="text-muted small">
+                <span id="previewSize">0 MB</span> &bull; <span id="previewType">application/pdf</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-danger" id="clearFileBtn" title="Remove file">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress mt-3 d-none" id="uploadProgressBar" style="height: 8px;">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Upload Actions -->
+      <div class="d-flex gap-3 justify-content-end">
+        <button type="button" class="btn btn-light px-4 py-2 rounded-3" id="cancelBtn" disabled>Cancel</button>
+        <button type="button" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold d-flex align-items-center gap-2" id="uploadBtn" disabled>
+          <i class="bi bi-cloud-arrow-up"></i>
+          <span id="uploadBtnText">Upload to Cloud</span>
+          <span id="uploadBtnSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Deduplication Result Display Banner (Appears after upload) -->
+    <div class="card border-0 shadow rounded-4 p-4 mb-4 d-none" id="dedupResultCard">
+      <div class="d-flex align-items-start gap-3">
+        <div class="rounded-circle p-3 d-flex align-items-center justify-content-center" id="resultStatusIconWrapper">
+          <i class="bi fs-2" id="resultStatusIcon"></i>
+        </div>
+        <div class="flex-grow-1">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <h5 class="fw-bold mb-0" id="resultTitle">Deduplication Result</h5>
+            <span class="badge py-2 px-3 rounded-pill" id="resultBadge">Status</span>
+          </div>
+          <p class="text-secondary small mb-3" id="resultMessage">Message description goes here.</p>
+
+          <div class="row g-2 mb-3 bg-light p-3 rounded-3 border">
+            <div class="col-sm-6">
+              <span class="text-muted small d-block">Display Name:</span>
+              <strong class="text-dark small" id="resultFilename">-</strong>
+            </div>
+            <div class="col-sm-6">
+              <span class="text-muted small d-block">File Size:</span>
+              <strong class="text-dark small" id="resultSize">-</strong>
+            </div>
+            <div class="col-sm-6">
+              <span class="text-muted small d-block">SHA-256 Fingerprint:</span>
+              <span class="hash-badge" id="resultHash">-</span>
+            </div>
+            <div class="col-sm-6">
+              <span class="text-muted small d-block">Storage Saved:</span>
+              <strong class="text-success small" id="resultSaved">-</strong>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <a href="/my-files" class="btn btn-primary btn-sm rounded-3">
+              <i class="bi bi-folder2-open me-1"></i>View in My Files
+            </a>
+            <button type="button" class="btn btn-outline-secondary btn-sm rounded-3" id="uploadAnotherBtn">
+              <i class="bi bi-plus-lg me-1"></i>Upload Another File
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}
