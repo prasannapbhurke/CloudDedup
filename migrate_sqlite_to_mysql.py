@@ -7,8 +7,10 @@ import os
 import sqlite3
 import pymysql
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 SQLITE_DB = BASE_DIR / "instance" / "clouddedup.db"
 
 MYSQL_HOST = os.environ.get("MYSQL_HOST", "127.0.0.1")
