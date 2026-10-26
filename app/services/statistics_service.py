@@ -62,6 +62,7 @@ class StatisticsService:
             .scalar()
             or 0
         )
+        logical_bytes = int(logical_bytes)
 
         # 5. Physical Storage = sum of sizes of DISTINCT stored objects referenced by user
         # We query the distinct stored_files for this user
@@ -76,12 +77,13 @@ class StatisticsService:
             .scalar()
             or 0
         )
+        physical_bytes = int(physical_bytes)
 
         # 6. Storage Saved
         saved_bytes = max(0, logical_bytes - physical_bytes)
 
         # 7. Saving Percentage
-        saving_percentage = (saved_bytes / logical_bytes * 100.0) if logical_bytes > 0 else 0.0
+        saving_percentage = (float(saved_bytes) / float(logical_bytes) * 100.0) if logical_bytes > 0 else 0.0
 
         return {
             "total_files": total_files,
